@@ -26,7 +26,7 @@
             <!-- Nav -->
             <nav id="nav">
                 <ul>
-                    <li><a href="#Abflug"><i class="fas fa-plane-departure"></i> Abfl&uuml;ge</a></li>
+                    <li><a href="#Flugzeug"><i class="fas fa-cannabis"></i> Flugzeug</a></li>
                     <li><a href="#Ankunft"><i class="fas fa-plane-arrival"></i> Ank&uuml;nfte</a></li>
                     <li><a href="#Flotte"><i class="fas fa-pastafarianism"></i> Flotte</a></li>
                 </ul>
@@ -35,26 +35,45 @@
             <!-- Main -->
             <div id="main">
 
-				<%
-					String subpage = "start";
-
-
-				%>
-
-                <!-- Abflug -->
-				<section id="Abflug" class="main special">
+                <!-- Flugzeug -->
+				<section id="Flugzeug" class="main special">
                     <header class="major">
-                        <h2><i class="fas fa-plane-departure"></i> Abflüge</h2>
+                        <h2><i class="fas fa-cannabis"></i> Flugzeug hinzuf&uuml;gen</h2>
                     </header>
-					<%@include file="index1.jsp" %>
 
-                    <!-- <ul class="features">
+                    <ul class="features" style="text-align: left;">
                         <li>
-                            <h3></h3>
-                            <p></p>
-                            <a href="" class="button"></a>
+							<form action="">
+							  Flugzeug Bezeichnung:<br>
+							  <input type="text" name="FLZbez" value="">
+							  <br>
+							  Aktive:<br>
+							  <input type="checkbox" name="FLZaktive" value=""> ist dieses Flugzeug zur Zeit aktiv
+							  <br>
+							  Anzahl gesamt Sitzpl&auml;tze:<br>
+							  <input type="number" name="FLZtotalPlaetze" min="1" max="140">
+							  <br>
+							  Anzahl 1. Klass Sitzpl&auml;tzen:<br>
+							  <input type="number" name="FLZ1KlsPlaetze" min="0" max="140">
+							  <br>
+							  <div style="margin-top: -8%;">
+								  von - bis:<br>
+								  <input type="number" name="FLZ1KlsPlaetzeVon" min="0" max="140" style="width: 45%; display: inline;"><span style="margin: 0 4%;">-</span><input type="number" name="FLZ1KlsPlaetzeBis" min="0" max="140" style="width: 45%; display: inline;">
+								  <br>
+							  </div>
+
+							  Anzahl Business Klass Sitzpl&auml;tzen:<br>
+							  <input type="number" name="FLZbKlsPlaetze" min="0" max="140">
+							  <br>
+							  Anzahl Varia Klass Sitzpl&auml;tzen:<br>
+							  <input type="number" name="FLZvKlsPlaetze" min="0" max="140">
+							  <br>
+							  Anzahl Economy Klass Sitzpl&auml;tzen:<br>
+							  <input type="number" name="FLZeKlsPlaetze" min="0" max="140">
+							  <br>
+							</form>
                         </li>
-                    </ul> -->
+                    </ul>
                 </section>
 
 				<!-- Ankunft -->

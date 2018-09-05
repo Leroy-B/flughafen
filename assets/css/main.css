@@ -2074,7 +2074,7 @@
 		margin: 0 0 1em 0;
 	}
 
-	input[type="text"],
+	input[type="text"], input[type="number"],
 	input[type="password"],
 	input[type="email"],
 	select,
@@ -2133,7 +2133,7 @@
 			display: none;
 		}
 
-	input[type="text"],
+	input[type="text"], input[type="number"],
 	input[type="password"],
 	input[type="email"],
 	select {
@@ -2146,7 +2146,7 @@
 
 	input[type="checkbox"],
 	input[type="radio"] {
-		-moz-appearance: none;
+		/* -moz-appearance: none;
 		-webkit-appearance: none;
 		-ms-appearance: none;
 		appearance: none;
@@ -2155,7 +2155,7 @@
 		margin-right: -2em;
 		opacity: 0;
 		width: 1em;
-		z-index: -1;
+		z-index: -1; */
 	}
 
 		input[type="checkbox"] + label,
@@ -2232,7 +2232,7 @@
 		color: #ffffff;
 	}
 
-	input[type="text"],
+	input[type="text"], input[type="number"],
 	input[type="password"],
 	input[type="email"],
 	select,
@@ -3363,10 +3363,10 @@
 				#nav + #main {
 					padding-top: 10;
 				}
-            
-            
-            
-            
+
+
+
+
             #nav.alt {
                 position: fixed;
                 top: 0;
@@ -3384,9 +3384,9 @@
 				#nav.alt ul li a {
 					font-size: 0.9em;
 				}
-            
-            
-            
+
+
+
 
 		}
 
@@ -3399,9 +3399,9 @@
 				#nav + #main {
 					padding-top: 10;
 				}
-            
-            
-            
+
+
+
             #nav.alt {
                 position: fixed;
                 top: 0;
@@ -3419,7 +3419,7 @@
 				#nav.alt ul li a {
 					font-size: 0.9em;
 				}
-            
+
 
 		}
 
@@ -3431,7 +3431,7 @@
     padding: 10px;
     flex-wrap: wrap;
 }
-			
+
 .flex_box {
     display: block;
     padding:  10px;
@@ -3567,7 +3567,7 @@
 			color: #636363;
 		}
 
-		#main input[type="text"],
+		#main input[type="text"], input[type="number"],
 		#main input[type="password"],
 		#main input[type="email"],
 		#main select,
