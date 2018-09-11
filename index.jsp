@@ -1,163 +1,179 @@
+<%@ page import="java.sql.*" %>
+<%@ page import="java.io.*" %>
+
 <!DOCTYPE HTML>
 <html lang="en">
 	<head>
 		<title>Flughafen LRY</title>
 		<meta charset="UTF-8">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-		<link href="/fontawesome/css/all.css" rel="stylesheet">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 
+		<style>
+			tr:hover { background-color: #c5c5c5; }
+			td { text-align: center; cursor: context-menu; }
+			.editableTxt { cursor: context-menu; }
+		</style>
 	</head>
 	<body>
 
-        <!-- Wrapper -->
-        <div id="wrapper">
+		<%
+		String FLZID = request.getParameter("FLZID");
+		String FLZbez = request.getParameter("FLZbez");
+		String FLZ1KlsPlaetze = request.getParameter("FLZ1KlsPlaetze");
+		String FLZbKlsPlaetze = request.getParameter("FLZbKlsPlaetze");
+		String FLZeKlsPlaetze = request.getParameter("FLZeKlsPlaetze");
+		String FLZvKlsPlaetze = request.getParameter("FLZvKlsPlaetze");
+		String FLZaktive = request.getParameter("FLZaktive");
 
-            <!-- Header -->
-            <header id="header" class="alt">
-                <span class="logo"><img src="images/logo2.png" alt="leroy's logo" width="200px"></span>
-				<h1>Flughafen LRY</h1>
-            </header>
+		String FLUGZEUG_ID = request.getParameter("FLUGZEUG_ID");
+		String BEZEICHNUNG = request.getParameter("BEZEICHNUNG");
+		String SITZE_1_KLASSE = request.getParameter("SITZE_1_KLASSE");
+		String SITZE_BUSINESS = request.getParameter("SITZE_BUSINESS");
+		String SITZE_ECONOMY = request.getParameter("SITZE_ECONOMY");
+		String SITZE_VARIA = request.getParameter("SITZE_VARIA");
+		String AKTIV = request.getParameter("AKTIV");
 
-            <!-- Nav -->
-            <nav id="nav">
-                <ul>
-                    <li><a href="#Flugzeug"><i class="fas fa-plane"></i> Flugzeug</a></li>
-					<li><a href="#Flotte"><i class="fas fa-pastafarianism"></i> Flotte</a></li>
-                    <li><a href="#Ankunft"><i class="fas fa-plane-arrival"></i> Ank&uuml;nfte</a></li>
-                </ul>
-            </nav>
+		Connection conn = null;
+		Statement stmt = null;
+		String dbuid = "flughafen";
+		String dbpwd = "flug";
+		int updateQuery = 0;
 
-            <!-- Main -->
-            <div id="main">
-				<%-- <%
-					String subpage = "start";
-					if(request.getParameter("seite") != null) {
-						subpage = request.getParameter("seite");
-					}
-					switch(subpage) {
-						case: "start":
-						%>
-							<jsp:include page="welcome.jsp" flush="true">
-						<% 	break;
-						case "flightmngt": %>
-							<jsp:include page="adminlogin.jsp" flush="true">
-								<% if(session.getAttribute("loggedInAsRole").indexOf("admin") >= 0){
-									%>
-										<jsp.include page="flightmngt.jsp" flush="true">
-									<% } else {
-										out.println("Bitte einloggen!");
-									   }
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection ("jdbc:mysql://localhost:3306/flughafendb", dbuid, dbpwd);
+		stmt = conn.createStatement();
+		%>
 
-					}
-				%> --%>
+		<script>
+			var array = [];
+			var headers = [];
+			var trid;
+			$('body').on('click', '.editableTxt', function() {
+				trid = $(this).closest('tr').attr('id');
 
-                <!-- Flugzeug -->
-				<section id="Flugzeug" class="main special">
-                    <header class="major">
-                        <h2><i class="fas fa-plane"></i> Flugzeug hinzuf&uuml;gen</h2>
-                    </header>
+				var $el = $(this);
+				var $input = $('<input/>').val( $el.text() );
+				$el.replaceWith( $input );
 
-                    <ul class="features" style="text-align: left;">
-                        <li>
-							<form action="">
-							  Flugzeug Bezeichnung:<br>
-							  <input type="text" name="FLZbez" value="" placeholder="z.B. FLZA105">
-							  <br>
-							  Aktive:<br>
-							  <input type="checkbox" name="FLZaktive" value=""> ist dieses Flugzeug zur Zeit aktiv
-							  <br>
-							  Anzahl gesamt Sitzpl&auml;tze:<br>
-							  <input type="number" name="FLZtotalPlaetze" min="1" max="140">
-							  <br>
-							  Anzahl 1. Klass Sitzpl&auml;tzen:<br>
-							  <input type="number" name="FLZ1KlsPlaetze" min="0" max="140">
-							  <br>
-							  <div style="margin-top: -8%;">
-								  von - bis:<br>
-								  <input type="number" name="FLZ1KlsPlaetzeVon" min="0" max="140" style="width: 45%; display: inline;"><span style="margin: 0 4%;">-</span><input type="number" name="FLZ1KlsPlaetzeBis" min="0" max="140" style="width: 45%; display: inline;">
-								  <br>
-							  </div>
-							  Anzahl Business Klass Sitzpl&auml;tzen:<br>
-							  <input type="number" name="FLZbKlsPlaetze" min="0" max="140">
-							  <br>
-							  <div style="margin-top: -8%;">
-								  von - bis:<br>
-								  <input type="number" name="FLZbKlsPlaetzeVon" min="0" max="140" style="width: 45%; display: inline;"><span style="margin: 0 4%;">-</span><input type="number" name="FLZbKlsPlaetzeBis" min="0" max="140" style="width: 45%; display: inline;">
-								  <br>
-							  </div>
-							  Anzahl Varia Klass Sitzpl&auml;tzen:<br>
-							  <input type="number" name="FLZvKlsPlaetze" min="0" max="140">
-							  <br>
-							  <div style="margin-top: -8%;">
-								  von - bis:<br>
-								  <input type="number" name="FLZvKlsPlaetzeVon" min="0" max="140" style="width: 45%; display: inline;"><span style="margin: 0 4%;">-</span><input type="number" name="FLZvKlsPlaetzeBis" min="0" max="140" style="width: 45%; display: inline;">
-								  <br>
-							  </div>
-							  Anzahl Economy Klass Sitzpl&auml;tzen:<br>
-							  <input type="number" name="FLZeKlsPlaetze" min="0" max="140">
-							  <br>
-							  <div style="margin-top: -8%;">
-								  von - bis:<br>
-								  <input type="number" name="FLZeKlsPlaetzeVon" min="0" max="140" style="width: 45%; display: inline;"><span style="margin: 0 4%;">-</span><input type="number" name="FLZeKlsPlaetzeBis" min="0" max="140" style="width: 45%; display: inline;">
-								  <br>
-							  </div>
-							  <a href="" class="button">Submit</a>
+				var save = function(){
+					var $p = $("<label class='editableTxt'></label>").text( $input.val() );
+					$input.replaceWith( $p );
 
-							</form>
-                        </li>
-                    </ul>
-                </section>
+					$('table thead tr th').each(function(index, item) {
+					    headers[index] = $(item).text();
+					});
+					$('table tr:not(:last)').has('td').each(function() {
+					    var arrayItem = {};
+					    $('td', $(this)).each(function(index, item) {
+					        arrayItem[headers[index]] = $(item).text();
+					    });
+					    array.push(arrayItem);
+					});
+					post(array);
 
-				<!-- Flotte -->
-				<section id="Flotte" class="main special">
-                    <header class="major">
-                        <h2><i class="fas fa-pastafarianism"></i> Unsere Flotte</h2>
-                    </header>
-					<ul class="features">
-                        <li>
-                            <h3></h3>
-                            <p></p>
-                            <a href="" class="button"></a>
-                        </li>
-                    </ul>
-                </section>
+				};
+				$input.one('blur', save).focus();
+			});
 
-				<!-- Ankunft -->
-				<section id="Ankunft" class="main special">
-                    <header class="major">
-                        <h2><i class="fas fa-plane-arrival"></i> Ankünfte</h2>
-                    </header>
-                    <ul class="features">
-                        <li>
-                            <h3></h3>
-                            <p></p>
-                            <a href="" class="button"></a>
-                        </li>
-                    </ul>
-                </section>
+			function post(parameters) {
+				var form = $('<form></form>');
+				form.attr("method", "post");
+				var result = parameters.find(obj => {
+					return obj.FLUGZEUG_ID == trid;
+				});
+				$.each( result, function( key, value ) {
+					var field = $('<input></input>');
 
-            </div>
+					field.attr("type", "hidden");
+					field.attr("name", key);
+					field.attr("value", value);
 
-            <!-- Footer -->
-            <footer id="footer">
-                <p class="copyright">&copy; Leroy<br></p>
-            </footer>
+					form.append(field);
+				});
 
-        </div>
+				$(document.body).append(form);
+				form.submit();
+			}
 
-        <!-- Scripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/js/jquery.scrollex.min.js"></script>
-        <script src="assets/js/jquery.scrolly.min.js"></script>
-        <script src="assets/js/skel.min.js"></script>
-        <script src="assets/js/util.js"></script>
-        <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-        <script src="assets/js/main.js"></script>
+		</script>
+
+		<%
+
+		try {
+
+			String the_sql = "UPDATE FLUGZEUGE SET FLUGZEUG_ID=?, BEZEICHNUNG=?, SITZE_1_KLASSE=?, SITZE_BUSINESS=?, SITZE_ECONOMY=?, SITZE_VARIA=?, AKTIV=? WHERE FLUGZEUG_ID=?";
+
+			PreparedStatement pstmt = conn.prepareStatement(the_sql);
+			pstmt.setString(1, FLUGZEUG_ID);
+			pstmt.setString(2, BEZEICHNUNG);
+			pstmt.setString(3, SITZE_1_KLASSE);
+			pstmt.setString(4, SITZE_BUSINESS);
+			pstmt.setString(5, SITZE_ECONOMY);
+			pstmt.setString(6, SITZE_VARIA);
+			pstmt.setString(7, AKTIV);
+			pstmt.setString(8, FLUGZEUG_ID);
+
+			updateQuery = pstmt.executeUpdate();
+		} catch(SQLException e){
+			out.println("<hr>" + e.getMessage() + "2<br>");
+		} finally {
+		}
+
+		try {
+
+			String the_sql = "DELETE FROM FLUGZEUGE WHERE FLUGZEUG_ID = ?";
+
+			PreparedStatement pstmt = conn.prepareStatement(the_sql);
+			pstmt.setString(1, FLZID);
+
+			updateQuery = pstmt.executeUpdate();
+		} catch(SQLException e){
+			out.println("<hr>" + e.getMessage() + "2<br>");
+		} finally {
+		}
+
+		try {
+
+			String the_sql = "INSERT INTO FLUGZEUGE(BEZEICHNUNG,SITZE_1_KLASSE,SITZE_BUSINESS,SITZE_ECONOMY,SITZE_VARIA,AKTIV) VALUES(?,?,?,?,?,?)";
+
+			PreparedStatement pstmt = conn.prepareStatement(the_sql);
+			pstmt.setString(1, FLZbez);
+			pstmt.setString(2, FLZ1KlsPlaetze);
+			pstmt.setString(3, FLZbKlsPlaetze);
+			pstmt.setString(4, FLZeKlsPlaetze);
+			pstmt.setString(5, FLZvKlsPlaetze);
+			pstmt.setString(6, FLZaktive);
+
+			updateQuery = pstmt.executeUpdate();
+		} catch(SQLException e){
+			out.println("<hr>" + e.getMessage() + "2<br>");
+		} finally {
+		}
+
+
+
+		try{
+
+			String the_sql = "SELECT * FROM FLUGZEUGE";
+			PreparedStatement pstmt = conn.prepareStatement(the_sql);
+			ResultSet res = pstmt.executeQuery();
+
+			out.println("<table id='SelectTable' border=1><thead><th id='FLUGZEUG_ID'>FLUGZEUG_ID</th><th id='BEZEICHNUNG'>BEZEICHNUNG</th><th id='SITZE_1_KLASSE'>SITZE_1_KLASSE</th><th id='SITZE_BUSINESS'>SITZE_BUSINESS</th><th id='SITZE_ECONOMY'>SITZE_ECONOMY</th><th id='SITZE_VARIA'>SITZE_VARIA</th><th id='AKTIV'>AKTIV</th></thead>");
+
+			int rowcount = 0;
+			while(res.next()) {
+				rowcount++;
+				out.print("<tr id=" + res.getString("FLUGZEUG_ID") + "><td><label class='selectMe'>" + res.getString("FLUGZEUG_ID") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("BEZEICHNUNG") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_1_KLASSE") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_BUSINESS") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_ECONOMY") + "</label></td><td><label class='editableTxt'>" + res.getString("SITZE_VARIA") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("AKTIV") + "</label></td><td><form method='post'><input type='submit' value='L&ouml;schen'><input type='hidden' name='FLZID' value=" + res.getString("FLUGZEUG_ID") + "></form></td></tr>");
+			}
+			out.print("<tr><form method='post' action=''><td><p>new dataset</p></td><td><input type='text' name='FLZbez' class='newInput' required></td><td><input type='number' name='FLZ1KlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZbKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZeKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZvKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZaktive' class='newInput' min='0' max='1' required></td><td><input type='submit' value='Hinzuf&uuml;gen'></td></form></tr>");
+
+			out.println("</table>");
+		} catch(SQLException e){
+			out.println("<hr>" + e.getMessage() + "<br>");
+		} finally {
+		}
+
+	  %>
 
 	</body>
 </html>
