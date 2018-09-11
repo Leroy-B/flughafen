@@ -27,11 +27,11 @@
 
 		String FLUGZEUG_ID = request.getParameter("FLUGZEUG_ID");
 		String BEZEICHNUNG = request.getParameter("BEZEICHNUNG");
-		String SITZE_1_KLASSE = request.getParameter("SITZE_1_KLASSE");
+		String SITZE_1__KLASSE = request.getParameter("SITZE_1__KLASSE");
 		String SITZE_BUSINESS = request.getParameter("SITZE_BUSINESS");
 		String SITZE_ECONOMY = request.getParameter("SITZE_ECONOMY");
 		String SITZE_VARIA = request.getParameter("SITZE_VARIA");
-		String AKTIV = request.getParameter("AKTIV");
+		String AKTIV_ = request.getParameter("AKTIV_");
 
 		Connection conn = null;
 		Statement stmt = null;
@@ -101,16 +101,16 @@
 
 		try {
 
-			String the_sql = "UPDATE FLUGZEUGE SET FLUGZEUG_ID=?, BEZEICHNUNG=?, SITZE_1_KLASSE=?, SITZE_BUSINESS=?, SITZE_ECONOMY=?, SITZE_VARIA=?, AKTIV=? WHERE FLUGZEUG_ID=?";
+			String the_sql = "UPDATE FLUGZEUGE SET FLUGZEUG_ID=?, BEZEICHNUNG=?, SITZE_1__KLASSE=?, SITZE_BUSINESS=?, SITZE_ECONOMY=?, SITZE_VARIA=?, AKTIV_=? WHERE FLUGZEUG_ID=?";
 
 			PreparedStatement pstmt = conn.prepareStatement(the_sql);
 			pstmt.setString(1, FLUGZEUG_ID);
 			pstmt.setString(2, BEZEICHNUNG);
-			pstmt.setString(3, SITZE_1_KLASSE);
+			pstmt.setString(3, SITZE_1__KLASSE);
 			pstmt.setString(4, SITZE_BUSINESS);
 			pstmt.setString(5, SITZE_ECONOMY);
 			pstmt.setString(6, SITZE_VARIA);
-			pstmt.setString(7, AKTIV);
+			pstmt.setString(7, AKTIV_);
 			pstmt.setString(8, FLUGZEUG_ID);
 
 			updateQuery = pstmt.executeUpdate();
@@ -134,7 +134,7 @@
 
 		try {
 
-			String the_sql = "INSERT INTO FLUGZEUGE(BEZEICHNUNG,SITZE_1_KLASSE,SITZE_BUSINESS,SITZE_ECONOMY,SITZE_VARIA,AKTIV) VALUES(?,?,?,?,?,?)";
+			String the_sql = "INSERT INTO FLUGZEUGE(BEZEICHNUNG,SITZE_1__KLASSE,SITZE_BUSINESS,SITZE_ECONOMY,SITZE_VARIA,AKTIV_) VALUES(?,?,?,?,?,?)";
 
 			PreparedStatement pstmt = conn.prepareStatement(the_sql);
 			pstmt.setString(1, FLZbez);
@@ -158,12 +158,12 @@
 			PreparedStatement pstmt = conn.prepareStatement(the_sql);
 			ResultSet res = pstmt.executeQuery();
 
-			out.println("<table id='SelectTable' border=1><thead><th id='FLUGZEUG_ID'>FLUGZEUG_ID</th><th id='BEZEICHNUNG'>BEZEICHNUNG</th><th id='SITZE_1_KLASSE'>SITZE_1_KLASSE</th><th id='SITZE_BUSINESS'>SITZE_BUSINESS</th><th id='SITZE_ECONOMY'>SITZE_ECONOMY</th><th id='SITZE_VARIA'>SITZE_VARIA</th><th id='AKTIV'>AKTIV</th></thead>");
+			out.println("<table id='SelectTable' border=1><thead><th id='FLUGZEUG_ID'>FLUGZEUG_ID</th><th id='BEZEICHNUNG'>BEZEICHNUNG</th><th id='SITZE_1__KLASSE'>SITZE_1__KLASSE</th><th id='SITZE_BUSINESS'>SITZE_BUSINESS</th><th id='SITZE_ECONOMY'>SITZE_ECONOMY</th><th id='SITZE_VARIA'>SITZE_VARIA</th><th id='AKTIV_'>AKTIV_</th></thead>");
 
 			int rowcount = 0;
 			while(res.next()) {
 				rowcount++;
-				out.print("<tr id=" + res.getString("FLUGZEUG_ID") + "><td><label class='selectMe'>" + res.getString("FLUGZEUG_ID") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("BEZEICHNUNG") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_1_KLASSE") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_BUSINESS") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_ECONOMY") + "</label></td><td><label class='editableTxt'>" + res.getString("SITZE_VARIA") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("AKTIV") + "</label></td><td><form method='post'><input type='submit' value='L&ouml;schen'><input type='hidden' name='FLZID' value=" + res.getString("FLUGZEUG_ID") + "></form></td></tr>");
+				out.print("<tr id=" + res.getString("FLUGZEUG_ID") + "><td><label class='selectMe'>" + res.getString("FLUGZEUG_ID") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("BEZEICHNUNG") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_1__KLASSE") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_BUSINESS") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("SITZE_ECONOMY") + "</label></td><td><label class='editableTxt'>" + res.getString("SITZE_VARIA") + "</label></td><td><label class='editableTxt selectMe'>" + res.getString("AKTIV_") + "</label></td><td><form method='post'><input type='submit' value='L&ouml;schen'><input type='hidden' name='FLZID' value=" + res.getString("FLUGZEUG_ID") + "></form></td></tr>");
 			}
 			out.print("<tr><form method='post' action=''><td><p>new dataset</p></td><td><input type='text' name='FLZbez' class='newInput' required></td><td><input type='number' name='FLZ1KlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZbKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZeKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZvKlsPlaetze' class='newInput' required></td><td><input type='number' name='FLZaktive' class='newInput' min='0' max='1' required></td><td><input type='submit' value='Hinzuf&uuml;gen'></td></form></tr>");
 
